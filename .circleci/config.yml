@@ -18,6 +18,7 @@ workflows:
   build-deploy:
     jobs:
       - push_image:
-        filters:
-          branches:
-            only: master
+          context: docker-context
+          filters:
+            branches:
+              only: master
