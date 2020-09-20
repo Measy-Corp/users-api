@@ -9,8 +9,8 @@ jobs:
       - checkout
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - run: docker-compose build --force-rm users-api
-      - run: docker build -t murilokakazu/users-api:$CIRCLE_SHA1 ./
-      - run: docker push murilokakazu/users-api:$CIRCLE_SHA1
+      - run: docker build -t murilokakazu/tempao-users-api:$CIRCLE_SHA1 ./
+      - run: docker push murilokakazu/tempao-users-api:$CIRCLE_SHA1
       - run: git tag V_$CIRCLE_BUILD_NUM
       - run: git push --tags
 
