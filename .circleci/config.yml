@@ -1,0 +1,24 @@
+version: 2.1
+orbs:
+  node: circleci/node@3.0.0
+jobs:
+  push_image:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run: docker-compose build --force-rm users-api
+      - run: docker build -t murilokakazu/tempao-users-api:$CIRCLE_SHA1 ./
+      - run: docker push murilokakazu/tempao-users-api:$CIRCLE_SHA1
+      - run: git tag V_$CIRCLE_BUILD_NUM
+      - run: git push --tags
+
+workflows:
+  build-deploy:
+    jobs:
+      - push_image:
+          context: docker-context
+          filters:
+            branches:
+              only: master
