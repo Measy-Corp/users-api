@@ -2,11 +2,11 @@ install:
 	npm install
 
 run:
-	make up
-	node -r dotenv/config src/main/server.js
+	docker-compose up
 
-up:
-	docker-compose up --detach
+run/dev:
+	docker-compose -f docker-compose.dev.yml up --detach
+	node start
 
 down:
-	docker-compose down
+	docker-compose down --remove-orphans

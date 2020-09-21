@@ -1,3 +1,12 @@
-FROM alpine:3.7
+FROM node:lts-alpine
 
-RUN apk add nodejs-current
+EXPOSE 5150
+
+RUN mkdir /app
+WORKDIR /app
+
+COPY . /app
+
+RUN npm install
+
+CMD ["npm", "start"]
