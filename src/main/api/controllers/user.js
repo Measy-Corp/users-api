@@ -1,11 +1,25 @@
-const { body, param, validationResult } = require('express-validator');
+const { body, param, check, validationResult } = require('express-validator');
 const User = require('../../infrastructure/models/user');
 
 const validators = {
   "basic": [
     body('id','id must be a valid UUID').isUUID(),
+    check('id').custom((value, { req }) => {
+      return User.findByPk(value).then(user => {
+        if (user) {
+            return Promise.reject('id already exists');
+        }
+      })
+    }),
     body('firstName', 'firstName must be set').optional().exists(),
     body('username', 'username must be set').exists(),
+    check('username').custom((value, { req }) => {
+      return User.findOne({where : {username : value}}).then(user => {
+        if (user) {
+            return Promise.reject('username already in use');
+        }
+      })
+    }),
     body('email', 'email is invalid').isEmail(),
     body('password', 'password must have a min. length of 5').isLength({ min: 5 }),
     body('phone').optional().isInt()
