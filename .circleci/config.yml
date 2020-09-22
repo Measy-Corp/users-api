@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@3.0.0
 jobs:
 
-  build_push_image:
+  build:
     machine:
       enabled: true
     steps:
@@ -21,21 +21,17 @@ jobs:
     steps:
       - checkout
       - run: |
-         sudo apt-get update
-         sudo apt-get install -y awscli
+          sudo apt-get update
+          sudo apt-get install -y awscli
       - run: |
-        zip -r deployment-${CIRCLE_SHA1}.zip ./
-        aws s3 cp deployment-${CIRCLE_SHA1}.zip s3://elasticbeanstalk-sa-east-1-025606474706
-        aws elasticbeanstalk create-application-version --application-name tempao-users-api \
-            --version-label ${CIRCLE_SHA1} --source-bundle S3Bucket="elasticbeanstalk-sa-east-1-025606474706",S3Key="deployment-${CIRCLE_SHA1}.zip"
-        aws elasticbeanstalk update-environment --application-name tempao-users-api \
-            --environment-name staging1 --version-label ${CIRCLE_SHA1}
+          chmod +x ./.deploy/bin/setup.sh
+          ./.deploy/bin/setup.sh
 
 workflows:
   build-deploy:
     jobs:
 
-      - build_push_image:
+      - build:
         context: docker-context
         filters:
           branches:
@@ -44,13 +40,13 @@ workflows:
       - hold_deploy:
         type: approval
         requires:
-          - build_push_image
+          - build
         filters:
           branches:
             only: master
 
-      - build_push_image:
-        context: aws-context
+      - deploy:
+        context: deployment-context
         requires:
           - hold_deploy
         filters:
