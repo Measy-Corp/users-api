@@ -21,34 +21,33 @@ jobs:
     steps:
       - checkout
       - run: |
-          sudo apt-get update
+          sudo apt-get update && \
           sudo apt-get install -y awscli
       - run: |
-          chmod +x ./.deploy/bin/setup.sh
+          chmod +x ./.deploy/bin/setup.sh && \
           ./.deploy/bin/setup.sh
 
 workflows:
   build-deploy:
     jobs:
-
       - build:
-        context: docker-context
-        filters:
-          branches:
-            only: master
+          context: docker-context
+          filters:
+            branches:
+              only: master
 
       - hold_deploy:
-        type: approval
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
 
       - deploy:
-        context: deployment-context
-        requires:
-          - hold_deploy
-        filters:
-          branches:
-            only: master
+          context: deployment-context
+          requires:
+            - hold_deploy
+          filters:
+            branches:
+              only: master
