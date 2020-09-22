@@ -25,7 +25,7 @@ jobs:
           sudo apt-get install -y awscli
       - run: |
           chmod +x ./.deploy/bin/setup.sh && \
-          ./.deploy/bin/setup.sh
+          ./.deploy/bin/setup.sh $CIRCLE_BUILD_NUM
 
 workflows:
   build-deploy:

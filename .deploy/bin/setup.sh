@@ -1,6 +1,9 @@
 #!/bin/bash
+
+version=${1:-$VERSION}
+
 if [[ \
-    "$VERSION" && "$AWS_DEFAULT_REGION" && "$AWS_SECRET_ACCESS_KEY" && "$AWS_ACCESS_KEY_ID" && \
+    "$version" && "$AWS_DEFAULT_REGION" && "$AWS_SECRET_ACCESS_KEY" && "$AWS_ACCESS_KEY_ID" && \
     "$S3_BUCKET" && "$PORT" && "$DATABASE_DIALECT" && "$DATABASE_ENDPOINT" && "$DATABASE_NAME" && \
     "$DATABASE_USERNAME" && "$DATABASE_PASSWORD" \
 ]]; then
@@ -15,17 +18,17 @@ if [[ \
         | tr " " "\n" \
         > .env
 
-    echo "Starting deployment of application with version ${VERSION}"
+    echo "Starting deployment of application with version ${version}"
 
-    zip -r deployment-${VERSION}.zip ./
+    zip -r deployment-${version}.zip ./ && \
 
-    aws s3 cp deployment-${VERSION}.zip s3://${S3_BUCKET}
+    aws s3 cp deployment-${version}.zip s3://${S3_BUCKET} && \
 
     aws elasticbeanstalk create-application-version --application-name tempao-users-api \
-        --version-label ${VERSION} --source-bundle S3Bucket=${S3_BUCKET},S3Key="deployment-${VERSION}.zip"
+        --version-label ${version} --source-bundle S3Bucket=${S3_BUCKET},S3Key="deployment-${version}.zip" && \
 
     aws elasticbeanstalk update-environment --application-name tempao-users-api \
-        --environment-name staging1 --version-label ${VERSION}
+        --environment-name staging1 --version-label ${version}
 
     echo "Application was deployed"
 
