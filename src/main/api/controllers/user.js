@@ -67,7 +67,6 @@ exports.authUser = (req, res, next) => {
 
   User.findOne({where : {username : req.body.username}})
       .then(user => {
-        console.log(user.password + ' == ' + req.body.password + '?');
         res.json(user.password == req.body.password)
       });
 }
