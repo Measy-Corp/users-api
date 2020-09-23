@@ -1,0 +1,13 @@
+version: '3'
+services:
+  users-api:
+    tty: true
+    stdin_open: true
+    build: .
+    image: "murilokakazu/tempao-users-api"
+    volumes:
+      - ".:/app"
+    environment:
+      PORT: 5150
+    ports:
+      - "5150:5150"
