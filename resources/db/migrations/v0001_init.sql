@@ -37,3 +37,19 @@ create table products (
     created_at timestamp with time zone not null,
     updated_at timestamp with time zone not null
 );
+
+create table ratings (
+    id uuid primary key not null,
+    store_id uuid not null,
+    user_id uuid not null,
+    score decimal not null,
+    comment text,
+    created_at timestamp with time zone not null,
+    updated_at timestamp with time zone not null,
+    CONSTRAINT fk_users
+      FOREIGN KEY(user_id) 
+	  REFERENCES users(id),
+    CONSTRAINT fk_stores
+      FOREIGN KEY(store_id) 
+	  REFERENCES stores(id)
+);

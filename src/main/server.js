@@ -6,6 +6,7 @@ const app = express();
 const router = express.Router();
 
 const userRoute = require('./api/routes/user')
+const ratingsRoute = require('./api/routes/rating')
 const storeRoute = require('./api/routes/store')
 const productRoute = require('./api/routes/product')
 const port = process.env.PORT;
@@ -13,6 +14,7 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use('/api', router);
 app.use('/api', userRoute);
+app.use('/api', ratingsRoute);
 app.use('/api', storeRoute);
 app.use('/api', productRoute);
 
