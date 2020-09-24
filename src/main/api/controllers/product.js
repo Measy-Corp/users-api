@@ -1,28 +1,28 @@
 const { body, param, check, validationResult } = require('express-validator');
-const product = require('../../infrastructure/models/product');
 const Product = require('../../infrastructure/models/product');
 
 const validators = {
   "basic": [
     body('id','id must be a valid UUID').isUUID(),
     check('id').custom((value, { req }) => {
-      return User.findByPk(value).then(user => {
-        if (user) {
+      return Product.findByPk(value).then(product => {
+        if (product) {
             return Promise.reject('id already exists');
         }
       })
     }),
-    body('firstName', 'firstName must be set').optional().exists(),
-    body('username', 'username must be set').exists(),
-    body('email', 'email is invalid').isEmail(),
-    body('phone').optional().isInt()
+    body('storeId','storeId must be a valid UUID').isUUID(),
+    body('name', 'name must have a min. length of 3').isLength({ min: 3 }),
+    body('description', 'name must have a min. length of 10').isLength({ min: 10 }),
+    body('category', 'category is empty').exists(),
+    body('unitPrice', 'unitPrice is invalid').isFloat({ min: 0.0 })
   ],
   "patch": [
-    body('id','id must be a valid UUID').isUUID(),
-    body('username', 'username is not writeable').isEmpty(),
-    body('email', 'email is invalid').optional().isEmail(),
-    body('password', 'password must have a min. length of 5').optional().isLength({ min: 5 }),
-    body('phone').optional().isInt()
+    body('storeId','storeId must be a valid UUID').isUUID(),
+    body('name', 'name must have a min. length of 3').isLength({ min: 3 }),
+    body('description', 'name must have a min. length of 10').isLength({ min: 10 }),
+    body('category', 'category is empty').exists(),
+    body('unitPrice', 'unitPrice is invalid').isFloat({ min: 0.0 })
   ],
   "id":[
     param('id','id must be a valid UUID').isUUID()

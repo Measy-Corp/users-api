@@ -11,3 +11,4 @@ services:
       - 5432:5432
     volumes:
       - ./resources/db/migrations/v0001_init.sql:/docker-entrypoint-initdb.d/v0001_init.sql
+      - ./resources/db/samples/x0001_sample.sql:/docker-entrypoint-initdb.d/x0001_sample.sql

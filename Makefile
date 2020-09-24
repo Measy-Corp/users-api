@@ -6,7 +6,7 @@ run:
 
 run/dev:
 	docker-compose -f docker-compose.dev.yml up --detach
-	node start
+	npm start
 
 down:
 	docker-compose down --remove-orphans
