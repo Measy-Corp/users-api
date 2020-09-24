@@ -1,27 +1,27 @@
 const router = require('express').Router();
 const userController = require('../controllers/user')
+const auth = require('../auth/controller');
 
 router.post('/user', 
-    userController.validate('basic'), 
+    auth.verify,
+    userController.validate('basic'),    
     userController.createUser
 );
 
-router.post('/user/auth', 
-    userController.validate('auth'), 
-    userController.authUser
-);
-
-router.patch('/user/:id', 
+router.patch('/user/:id',
+    auth.verify,
     userController.validate('patch'), 
     userController.updateUser
 );
 
 router.get('/user/:id',
+    auth.verify,
     userController.validate('id'), 
     userController.getUserByID
 );
 
 router.get('/user/username/:username',
+    auth.verify,
     userController.validate('username'), 
     userController.getUserByUsername
 );

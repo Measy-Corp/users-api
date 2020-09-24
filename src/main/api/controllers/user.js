@@ -58,19 +58,6 @@ exports.createUser = (req, res, next) => {
       .then(user => res.json(user));
 }
 
-exports.authUser = (req, res, next) => {
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  User.findOne({where : {username : req.body.username}})
-      .then(user => {
-        res.json(user.password == req.body.password)
-      });
-}
-
 exports.updateUser = (req, res, next) => {
 
   const errors = validationResult(req);
@@ -85,7 +72,7 @@ exports.updateUser = (req, res, next) => {
 }
 
 exports.getUserByID = (req, res, next) => {
-
+  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
