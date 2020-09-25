@@ -5,7 +5,6 @@ const validationHandler = require('../utils/validationHandler')
 const auth = require('../auth/controller');
 
 router.post('/user', 
-    auth.verify,
     validator.getValidations('post'),    
     validationHandler.handleValidations,
     controller.createUser
