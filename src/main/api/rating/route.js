@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ratingController = require('../controllers/rating')
+const ratingController = require('./controller')
 
 router.post('/rating',
     ratingController.validate('basic'),

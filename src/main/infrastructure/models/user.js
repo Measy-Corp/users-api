@@ -41,5 +41,13 @@ module.exports = User.init({
 }, {
   sequelize: sequelize, 
   modelName: 'user',
-  underscored: true
+  underscored: true,
+  defaultScope: {
+    attributes: { exclude: ['password'] },
+  },
+  scopes: {
+    withPassword: {
+      attributes: { include: ['password'] },
+    }
+  }
 });

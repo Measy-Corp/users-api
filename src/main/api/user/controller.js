@@ -24,19 +24,15 @@ const validators = {
     body('password', 'password must have a min. length of 5').isLength({ min: 5 }),
     body('phone').optional().isInt()
   ],
-  "auth": [
-    body('username', 'username must be set').exists(),
-    body('password', 'password must be set').exists(),
-  ],
   "patch": [
-    body('id','id must be a valid UUID').isUUID(),
+    param('id', 'id must be a valid UUID').isUUID(),
     body('username', 'username is not writeable').isEmpty(),
     body('email', 'email is invalid').optional().isEmail(),
     body('password', 'password must have a min. length of 5').optional().isLength({ min: 5 }),
     body('phone').optional().isInt()
   ],
   "id":[
-    param('id','id must be a valid UUID').isUUID()
+    param('id', 'id must be a valid UUID').isUUID()
   ],
   "username":[
     param('username','username must be set').exists(),

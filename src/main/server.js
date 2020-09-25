@@ -5,11 +5,11 @@ const expressValidator = require('express-validator');
 const app = express();
 const router = express.Router();
 
-const authRoute = require('./api/auth/routes')
-const userRoute = require('./api/routes/user')
-const ratingsRoute = require('./api/routes/rating')
-const storeRoute = require('./api/routes/store')
-const productRoute = require('./api/routes/product')
+const authRoute = require('./api/auth/route')
+const userRoute = require('./api/user/route')
+const ratingsRoute = require('./api/rating/route')
+const storeRoute = require('./api/store/route')
+const productRoute = require('./api/product/route')
 const port = process.env.PORT;
 
 app.use(express.json());

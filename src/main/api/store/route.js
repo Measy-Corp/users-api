@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const storeController = require('../controllers/store')
+const storeController = require('./controller')
 const auth = require('../auth/controller');
 
 router.post('/store',
