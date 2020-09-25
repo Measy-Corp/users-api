@@ -1,7 +1,8 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('../../sequelize.js')
+const sequelize = require('../../sequelize.js');
 const User = require('../user/model');
 const Store = require('../store/model');
+require('sequelize-noupdate-attributes')(sequelize);
 
 class Order extends Model {}
 
@@ -13,11 +14,13 @@ module.exports = Order.init({
 	},
 
 	userId: {
-		type: DataTypes.UUIDV4
+		type: DataTypes.UUIDV4,
+		noUpdate : true
 	},
 
 	storeId: {
-		type: DataTypes.UUIDV4
+		type: DataTypes.UUIDV4,
+		noUpdate : true
 	},
 
 	status: {

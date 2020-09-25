@@ -13,19 +13,24 @@ module.exports = OrderItem.init({
 	},
 
 	orderId: {
-		type: DataTypes.UUIDV4
+		type: DataTypes.UUIDV4,
+		allowNull: false,
+		noUpdate : true
 	},
 
 	quantity: {
-		type: DataTypes.INTEGER
+		type: DataTypes.INTEGER,
+		allowNull: false
 	},
 
 	productId: {
-		type: DataTypes.UUIDV4
+		type: DataTypes.UUIDV4,
+		allowNull: false
 	},
 
 	unitPrice: {
-		type: DataTypes.DECIMAL
+		type: DataTypes.DECIMAL,
+		allowNull: false
 	}
 
 }, {

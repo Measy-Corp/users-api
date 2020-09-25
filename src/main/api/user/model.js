@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('../../sequelize.js')
+const sequelize = require('../../sequelize.js');
+require('sequelize-noupdate-attributes')(sequelize);
 
 class User extends Model {}
 
@@ -17,7 +18,8 @@ module.exports = User.init({
 
   username: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    noUpdate : true
   },
 
   password: {

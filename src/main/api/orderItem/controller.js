@@ -1,65 +1,38 @@
-const { body, param, check, validationResult } = require('express-validator');
 const OrderItem = require('./model');
 
-const validators = {
-  "post": [
-    body('id','id must be a valid UUID').isUUID(),
-    check('id').custom((value, { req }) => {
-      return OrderItem.findByPk(value).then(orderItem => {
-        if (orderItem) {
-            return Promise.reject('id already exists');
-        }
-      })
-    }),
-    body('orderId','orderId must be a valid UUID').isUUID(),
-    body('productId','userId must be a valid UUID').isUUID(),
-    body('quantity', 'status is empty').isInt(),
-    body('unitPrice', 'unitPrice is invalid').isFloat({ min: 0.0 })
-  ],
-  "patch": [
-		body('id','id must be a valid UUID').isUUID(),
-    body('orderId','orderId must be a valid UUID').optional().isUUID(),
-    body('productId','userId must be a valid UUID').optional().isUUID(),
-    body('quantity', 'status is empty').optional().isInt(),
-    body('unitPrice', 'unitPrice is invalid').optional().isFloat({ min: 0.0 })
-  ]
-}
-
-exports.validate = (validator) => {
-  return validators[validator];
-}
-
 exports.createOrderItem = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    OrderItem.findOne({ where: { id: req.body.id } }).then(orderItem => {
+      if (orderItem) {
+        res.status(422).json({ 'message': 'orderItem already exists with the same id' });
+      } else {
+        OrderItem.create(req.body).then(orderItem => res.json(orderItem));
+      }
+    });
+
+  } catch (err) {
+    return next(err);
   }
-
-  OrderItem.create(req.body)
-      		 .then(orderItem => res.json(orderItem));
 }
 
 exports.updateOrderItem = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    OrderItem.update(req.body, { where: { id: req.params.id }, returning: true, plain: true })
+      .then(result => { res.json(result[1]); });
+
+  } catch (err) {
+    return next(err);
   }
-
-  OrderItem.update(req.body, {where : {id : req.params.id}, returning: true, plain: true})
-					 .then(result => {
-					 		res.json(result[1]);
-					 });
 }
 
 exports.getOrderItemByID = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    OrderItem.findByPk(req.params.id).then(orderItem => res.json(orderItem));
+
+  } catch (err) {
+    return next(err);
   }
-
-  OrderItem.findByPk(req.params.id)
-       		 .then(orderItem => res.json(orderItem));
 }

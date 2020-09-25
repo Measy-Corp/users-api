@@ -1,114 +1,71 @@
-const { body, param, check, validationResult } = require('express-validator');
 const Store = require('./model');
 const Order = require('../order/model');
 const { Op } = require('sequelize');
 
-const validators = {
-  "post": [
-    body('id','id must be a valid UUID').isUUID(),
-    check('id').custom((value, { req }) => {
-      return Store.findByPk(value).then(store => {
-        if (store) {
-            return Promise.reject('id already exists');
-        }
-      })
-    }),
-    body('ownerId', 'ownerId must be a valid UUID').isUUID(),
-    body('document', 'document must be set').exists(),
-    body('name', 'name must have a min. length of 3').isLength({ min: 3 }),
-    body('phone', 'name must be set').exists(),
-    body('address', 'category must be set').exists(),
-    body('email', 'email is invalid').isEmail(),
-    body('type', 'type must be set').exists(),
-  ],
-  "patch": [
-    body('ownerId', 'ownerId must be a valid UUID').optional().isUUID(),
-    body('document', 'document must be set').optional().exists(),
-    body('name', 'name must have a min. length of 3').optional().isLength({ min: 3 }),
-    body('phone', 'name must be set').optional().exists(),
-    body('address', 'category must be set').optional().exists(),
-    body('email', 'email is invalid').optional().isEmail(),
-    body('type', 'type must be set').optional().exists(),
-  ],
-  "getById": [
-    param('id', 'id must be a valid UUID').isUUID()
-  ],
-  "getByName": [
-    param('name', 'name must have a length of at least 4').isLength({ min: 4 })
-  ],
-  "getByType": [
-    param('type', 'type must be set').exists()
-  ]
-}
-
-exports.validate = (validator) => {
-  return validators[validator];
-}
-
 exports.createStore = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    Store.findOne({ where: { id: req.body.id }}).then(store => {
+      if (store) {
+        res.status(422).json({'message': 'store already exists with the same id'}); 
+      } else {
+        Store.create(req.body).then(user => res.json(user));
+      }
+    });
+
+  } catch (err) {
+    return next(err);
   }
-
-  Store.create(req.body)
-      .then(user => res.json(user));
 }
 
 exports.updateStore = (req, res, next) => {
-  
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  try {
 
-  Store.update(req.body, {where : {id : req.params.id}, returning: true, plain: true})
-    .then(result => {
-      res.json(result[1]);
-    });
+  Store.update(req.body, { where: { id: req.params.id }, returning: true, plain: true})
+    .then(result => { res.json(result[1]); });
+
+  } catch (err) {
+    return next(err);
+  }
 }
 
 exports.getStoreByID = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    Store.findByPk(req.params.id).then(user => res.json(user));
+
+  } catch (err) {
+    return next(err);
   }
-
-  Store.findByPk(req.params.id)
-       .then(user => res.json(user));
 }
 
 exports.getStoresByName = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+  Store.findAll({ where: { name: { [Op.iLike]: req.params.name + '%' }}})
+    .then(stores => res.json(stores));
+
+  } catch (err) {
+    return next(err);
   }
-
-  Store.findAll({where : {name : {[Op.iLike] : req.params.name + '%'}}})
-      .then(stores => res.json(stores));
 }
 
 exports.getStoresByType = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    Store.findAll({ where: { type: req.params.type }}).then(stores => res.json(stores));
+
+  } catch (err) {
+    return next(err);
   }
-
-  Store.findAll({where : {type : req.params.type}})
-       .then(stores => res.json(stores));
 }
 
 exports.getOrdersByStoreId = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    Order.findAll({ where: { storeId: req.params.id }}).then(orders => res.json(orders));
+
+  } catch (err) {
+    return next(err);
   }
-
-  Order.findAll({where : {storeId : req.params.id}})
-       .then(orders => res.json(orders));
 }

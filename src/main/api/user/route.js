@@ -1,33 +1,41 @@
 const router = require('express').Router();
-const controller = require('./controller')
+const controller = require('./controller');
+const validator = require('./validator');
+const validationHandler = require('../utils/validationHandler')
 const auth = require('../auth/controller');
 
 router.post('/user', 
-    controller.validate('basic'),    
+    auth.verify,
+    validator.getValidations('post'),    
+    validationHandler.handleValidations,
     controller.createUser
 );
 
 router.patch('/user/:id',
     auth.verify,
-    controller.validate('patch'), 
+    validator.getValidations('patch'), 
+    validationHandler.handleValidations,
     controller.updateUser
 );
 
 router.get('/user/:id',
     auth.verify,
-    controller.validate('id'), 
+    validator.getValidations('idParam'), 
+    validationHandler.handleValidations,
     controller.getUserByID
 );
 
 router.get('/user/username/:username',
     auth.verify,
-    controller.validate('username'), 
+    validator.getValidations('usernameParam'), 
+    validationHandler.handleValidations,
     controller.getUserByUsername
 );
 
 router.get('/user/:id/orders',
     auth.verify,
-    controller.validate('id'), 
+    validator.getValidations('idParam'), 
+    validationHandler.handleValidations,
     controller.getOrdersByUserId
 );
 

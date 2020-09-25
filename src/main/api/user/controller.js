@@ -1,102 +1,61 @@
-const { body, param, check, validationResult } = require('express-validator');
+const { Op } = require("sequelize");
 const User = require('./model');
 const Order = require('../order/model');
 
-const validators = {
-  "basic": [
-    body('id','id must be a valid UUID').isUUID(),
-    check('id').custom((value, { req }) => {
-      return User.findByPk(value).then(user => {
-        if (user) {
-            return Promise.reject('id already exists');
-        }
-      })
-    }),
-    body('firstName', 'firstName must be set').optional().exists(),
-    body('username', 'username must be set').exists(),
-    check('username').custom((value, { req }) => {
-      return User.findOne({where : {username : value}}).then(user => {
-        if (user) {
-            return Promise.reject('username already in use');
-        }
-      })
-    }),
-    body('email', 'email is invalid').isEmail(),
-    body('password', 'password must have a min. length of 5').isLength({ min: 5 }),
-    body('phone').optional().isInt()
-  ],
-  "patch": [
-    param('id', 'id must be a valid UUID').isUUID(),
-    body('username', 'username is not writeable').isEmpty(),
-    body('email', 'email is invalid').optional().isEmail(),
-    body('password', 'password must have a min. length of 5').optional().isLength({ min: 5 }),
-    body('phone').optional().isInt()
-  ],
-  "id":[
-    param('id', 'id must be a valid UUID').isUUID()
-  ],
-  "username":[
-    param('username','username must be set').exists(),
-  ]
-}
-
-exports.validate = (validator) => {
-  return validators[validator];
-}
-
 exports.createUser = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  User.findOne({ where: {[Op.or]: [{ id: req.body.id }, { username: req.body.username }]}})
+    .then(user => { 
+      if (user) {
+        res.status(422).json({'message': 'user already exists with the same id or username'}); 
+      } else {
+        User.create(req.body).then(user => res.json(user));
+      }
+  })
 
-  User.create(req.body)
-      .then(user => res.json(user));
+  } catch (err) {
+    return next(err);
+  } 
 }
 
 exports.updateUser = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    User.update(req.body, { where: { id: req.params.id }, returning: true, plain: true})
+      .then(result => res.json(result[1]));
+
+  } catch (err) {
+    return next(err);
   }
-
-  User.update(req.body, {where : {id : req.params.id}, returning: true, plain: true})
-      .then(result => {
-        res.json(result[1]);
-      });
 }
 
 exports.getUserByID = (req, res, next) => {
-  
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  try {
 
-  User.findByPk(req.params.id)
-      .then(user => res.json(user));
+    User.findByPk(req.params.id).then(user => res.json(user));
+
+  } catch (err) {
+    return next(err);
+  }
 }
 
 exports.getUserByUsername = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    User.findOne({ where: { username: req.params.username }}).then(user => res.json(user));
+
+  } catch (err) {
+    return next(err);
   }
-
-  User.findOne({where : {username : req.params.username}})
-      .then(user => res.json(user));
 }
 
 exports.getOrdersByUserId = (req, res, next) => {
+  try {
 
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    Order.findAll({ where: { userId: req.params.id }}).then(orders => res.json(orders));
+
+  } catch (err) {
+    return next(err);
   }
-
-  Order.findAll({where : {userId : req.params.id}})
-       .then(orders => res.json(orders));
 }

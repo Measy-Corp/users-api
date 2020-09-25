@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('../../sequelize.js')
+const sequelize = require('../../sequelize.js');
 const Store = require('../store/model');
+require('sequelize-noupdate-attributes')(sequelize);
 
 class Product extends Model {}
 
@@ -36,7 +37,8 @@ module.exports = Product.init({
   },
 
   storeId: {
-    type: DataTypes.UUIDV4
+    type: DataTypes.UUIDV4,
+    noUpdate : true
   }
 
 }, {
