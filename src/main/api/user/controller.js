@@ -1,5 +1,6 @@
 const { body, param, check, validationResult } = require('express-validator');
-const User = require('../../infrastructure/models/user');
+const User = require('./model');
+const Order = require('../order/model');
 
 const validators = {
   "basic": [
@@ -87,4 +88,15 @@ exports.getUserByUsername = (req, res, next) => {
 
   User.findOne({where : {username : req.params.username}})
       .then(user => res.json(user));
+}
+
+exports.getOrdersByUserId = (req, res, next) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  Order.findAll({where : {userId : req.params.id}})
+       .then(orders => res.json(orders));
 }

@@ -93,3 +93,47 @@ insert into ratings(
     '2020-09-19 22:01:20',
     '2020-09-19 22:01:20'
 );
+
+-- Orders
+insert into orders(
+    id,
+    user_id,
+    status,
+    total_price,
+    description,
+    store_id,
+    is_deleted,
+    created_at,
+    updated_at
+) values (
+    '626a8220-e380-4c1d-87aa-7f985c247bfc',
+    '93976395-1AC2-4ACA-ADE4-FF7920C629E1',
+    'In preparation',
+    63,
+    '',
+    'F433E71F-C117-408A-9C9C-A6F6FA941012',
+    false,
+    '2020-09-19 22:01:20',
+    '2020-09-19 22:01:20'
+);
+
+-- OrderItems
+insert into order_items(
+    id,
+    order_id,
+    quantity,
+    unit_price,
+    product_id,
+    is_deleted,
+    created_at,
+    updated_at
+) values (
+    '2ca7c3de-fb0a-4a9f-9637-a6d51cc8a9fd',
+    '626a8220-e380-4c1d-87aa-7f985c247bfc',
+    3,
+    31.5,
+    '5A6B60E8-59A0-4DC4-BEEF-014025A4886E',
+    false,
+    '2020-09-19 22:01:20',
+    '2020-09-19 22:01:20'
+);

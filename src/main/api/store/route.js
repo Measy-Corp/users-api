@@ -1,36 +1,40 @@
 const router = require('express').Router();
-const storeController = require('./controller')
+const controller = require('./controller')
 const auth = require('../auth/controller');
 
 router.post('/store',
     auth.verify,
-    storeController.validate('post'),
-    storeController.createStore
+    controller.validate('post'),
+    controller.createStore
 );
 
 router.patch('/store/:id',
     auth.verify,
-    storeController.validate('patch'),
-    storeController.updateStore
+    controller.validate('patch'),
+    controller.updateStore
 );
 
 router.get('/store/:id',
     auth.verify,
-    storeController.validate('getById'),
-    storeController.getStoreByID
+    controller.validate('getById'),
+    controller.getStoreByID
 );
 
 router.get('/store/name/:name',
     auth.verify,
-    storeController.validate('getByName'),
-    storeController.getStoresByName
+    controller.validate('getByName'),
+    controller.getStoresByName
 );
 
 router.get('/store/type/:type',
     auth.verify,
-    storeController.validate('getByType'),
-    storeController.getStoresByType
+    controller.validate('getByType'),
+    controller.getStoresByType
 );
 
+router.get('/store/:id/orders',
+    auth.verify,
+    controller.getOrdersByStoreId
+);
 
 module.exports = router;

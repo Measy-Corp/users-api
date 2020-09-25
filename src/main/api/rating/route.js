@@ -1,24 +1,29 @@
 const router = require('express').Router();
-const ratingController = require('./controller')
+const controller = require('./controller');
+const auth = require('../auth/controller');
 
 router.post('/rating',
-    ratingController.validate('basic'),
-    ratingController.createRating
+    auth.verify,
+    controller.validate('basic'),
+    controller.createRating
 );
 
 router.get('/rating/:id',
-    ratingController.validate('id'),
-    ratingController.getRatingByID
+    auth.verify,
+    controller.validate('id'),
+    controller.getRatingByID
 );
 
 router.get('/rating/store/:storeId',
-    ratingController.validate('storeId'),
-    ratingController.getRatingsByStoreId
+    auth.verify,
+    controller.validate('storeId'),
+    controller.getRatingsByStoreId
 );
 
 router.patch('/rating/:id',
-    ratingController.validate('patch'),
-    ratingController.updateRatingById
+    auth.verify,
+    controller.validate('patch'),
+    controller.updateRatingById
 );
 
 

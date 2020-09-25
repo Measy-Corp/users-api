@@ -1,5 +1,6 @@
 const { body, param, check, validationResult } = require('express-validator');
-const Store = require('../../infrastructure/models/store');
+const Store = require('./model');
+const Order = require('../order/model');
 const { Op } = require('sequelize');
 
 const validators = {
@@ -99,4 +100,15 @@ exports.getStoresByType = (req, res, next) => {
 
   Store.findAll({where : {type : req.params.type}})
        .then(stores => res.json(stores));
+}
+
+exports.getOrdersByStoreId = (req, res, next) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  Order.findAll({where : {storeId : req.params.id}})
+       .then(orders => res.json(orders));
 }

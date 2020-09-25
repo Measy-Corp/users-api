@@ -53,3 +53,38 @@ create table ratings (
       FOREIGN KEY(store_id) 
 	  REFERENCES stores(id)
 );
+
+create table orders (
+    id uuid primary key not null,
+    user_id uuid not null,
+    status character varying,
+    total_price decimal not null,
+    description character varying,
+    store_id uuid not null,
+    is_deleted boolean not null default false,
+    created_at timestamp with time zone not null,
+    updated_at timestamp with time zone not null,
+    CONSTRAINT fk_users
+      FOREIGN KEY(user_id) 
+	  REFERENCES users(id),
+    CONSTRAINT fk_stores
+      FOREIGN KEY(store_id) 
+	  REFERENCES stores(id)
+);
+
+create table order_items (
+    id uuid primary key not null,
+    order_id uuid not null,
+    quantity integer not null,
+    unit_price decimal not null,
+    product_id uuid not null,
+    is_deleted boolean not null default false,
+    created_at timestamp with time zone not null,
+    updated_at timestamp with time zone not null,
+    CONSTRAINT fk_orders
+      FOREIGN KEY(order_id) 
+	  REFERENCES orders(id),
+    CONSTRAINT fk_products
+      FOREIGN KEY(product_id) 
+	  REFERENCES products(id)
+);

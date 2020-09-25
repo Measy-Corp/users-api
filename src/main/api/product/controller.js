@@ -1,8 +1,8 @@
 const { body, param, check, validationResult } = require('express-validator');
-const Product = require('../../infrastructure/models/product');
+const Product = require('./model');
 
 const validators = {
-  "basic": [
+  "post": [
     body('id','id must be a valid UUID').isUUID(),
     check('id').custom((value, { req }) => {
       return Product.findByPk(value).then(product => {

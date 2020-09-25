@@ -1,5 +1,5 @@
 const { body, param, check, validationResult } = require('express-validator');
-const Rating = require('../../infrastructure/models/rating');
+const Rating = require('./model');
 
 
 const validators = {

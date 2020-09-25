@@ -2,21 +2,21 @@ const router = require('express').Router();
 const controller = require('./controller');
 const auth = require('../auth/controller');
 
-router.post('/product', 
+router.post('/orderitem', 
     auth.verify,
     controller.validate('post'),
-    controller.createProduct
+    controller.createOrderItem
 );
 
-router.patch('/product/:id', 
+router.patch('/orderitem/:id', 
     auth.verify,
     controller.validate('patch'),
-    controller.updateProduct
+    controller.updateOrderItem
 );
 
-router.get('/product/:id',
+router.get('/orderitem/:id',
     auth.verify,
-    controller.getProductByID
+    controller.getOrderItemByID
 );
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('../configs/sequelize.js')
-const Store = require('./store');
+const sequelize = require('../../sequelize.js')
+const Store = require('../store/model');
 
 class Product extends Model {}
 
@@ -45,4 +45,4 @@ module.exports = Product.init({
   underscored: true
 });
 
-Product.belongsTo(Store, {foreignKey: 'storeId', targetKey: 'id'});
+Product.belongsTo(Store);
