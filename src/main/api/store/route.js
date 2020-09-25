@@ -7,7 +7,7 @@ router.post('/store',
     storeController.createStore
 );
 
-router.patch('/store',
+router.patch('/store:id',
     auth.verify,
     storeController.updateStore
 );
