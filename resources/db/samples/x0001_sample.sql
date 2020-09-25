@@ -74,3 +74,22 @@ insert into products(
     '2020-09-19 22:01:20',
     '2020-09-19 22:01:20'
 );
+
+-- Ratings
+insert into ratings(
+    id,
+    store_id,
+    user_id,
+    score,
+    comment,
+    created_at,
+    updated_at
+) values (
+    '62A1061D-A05D-4CF7-AD43-83CAF74754A2',
+    'F433E71F-C117-408A-9C9C-A6F6FA941012',
+    '93976395-1AC2-4ACA-ADE4-FF7920C629E1',
+    4.0,
+    'Very nice!',
+    '2020-09-19 22:01:20',
+    '2020-09-19 22:01:20'
+);
