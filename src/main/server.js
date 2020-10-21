@@ -16,14 +16,14 @@ const orderItemRoute = require('./api/orderItem/route')
 const port = process.env.PORT;
 
 app.use(express.json());
-app.use('/api', authRoute);
-app.use('/api', router);
-app.use('/api', userRoute);
-app.use('/api', ratingsRoute);
-app.use('/api', storeRoute);
-app.use('/api', productRoute);
-app.use('/api', orderRoute);
-app.use('/api', orderItemRoute);
+app.use('/api', cors(), authRoute);
+app.use('/api', cors(), router);
+app.use('/api', cors(), userRoute);
+app.use('/api', cors(), ratingsRoute);
+app.use('/api', cors(), storeRoute);
+app.use('/api', cors(), productRoute);
+app.use('/api', cors(), orderRoute);
+app.use('/api', cors(), orderItemRoute);
 
 app.use(helmet());
 app.use(cors());
