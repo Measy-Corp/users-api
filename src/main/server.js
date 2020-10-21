@@ -1,6 +1,7 @@
-// require('dotenv').config();
 const express = require('express');
 const expressValidator = require('express-validator');
+const helmet = require('helmet');
+const cors = require('cors');
 
 const app = express();
 const router = express.Router();
@@ -23,6 +24,13 @@ app.use('/api', storeRoute);
 app.use('/api', productRoute);
 app.use('/api', orderRoute);
 app.use('/api', orderItemRoute);
+
+app.use(helmet());
+app.use(cors());
+
+app.options('*', cors());
+
+app.disable('X-Powered-By');
 
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
